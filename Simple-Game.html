@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VolcaRun - Epic Volcanic Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #ff6b35);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        .landing-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="rgba(255,107,53,0.3)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><circle fill="url(%23a)" cx="10" cy="10" r="3"><animate attributeName="cy" values="10;5;10" dur="3s" repeatCount="indefinite"/></circle><circle fill="url(%23a)" cx="30" cy="15" r="2"><animate attributeName="cy" values="15;8;15" dur="4s" repeatCount="indefinite"/></circle><circle fill="url(%23a)" cx="70" cy="8" r="4"><animate attributeName="cy" values="8;3;8" dur="2.5s" repeatCount="indefinite"/></circle><circle fill="url(%23a)" cx="90" cy="12" r="3"><animate attributeName="cy" values="12;7;12" dur="3.5s" repeatCount="indefinite"/></circle></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.7)); }
+            to { filter: drop-shadow(0 0 40px rgba(255, 107, 53, 1)); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu-button {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .levels-button {
+            background: linear-gradient(45deg, #3742fa, #5352ed);
+            animation-delay: 0.5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-button:hover, .play-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.6);
+        }
+
+        .levels-button:hover {
+            box-shadow: 0 20px 40px rgba(55, 66, 250, 0.6);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 0 2rem;
+            max-width: 1000px;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature h3 {
+            color: #ffcd3c;
+            margin-bottom: 1rem;
+        }
+
+        /* Level Selection Styles */
+        .level-selection {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(135deg, #2c1810, #4a2c17);
+            position: relative;
+        }
+
+        .level-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .level-header h2 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .back-button {
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .roadmap-container {
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            overflow-x: auto;
+            min-height: 60vh;
+        }
+
+        .roadmap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8rem;
+            padding: 2rem;
+            min-width: fit-content;
+        }
+
+        .roadmap-path {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e, #ffcd3c);
+            border-radius: 3px;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .roadmap-path::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(90deg, rgba(255, 107, 53, 0.3), rgba(247, 147, 30, 0.3), rgba(255, 205, 60, 0.3));
+            border-radius: 6px;
+            z-index: -1;
+            animation: pathGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pathGlow {
+            from { box-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
+            to { box-shadow: 0 0 20px rgba(255, 107, 53, 0.8); }
+        }
+
+        .level-node {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .level-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 4px solid transparent;
+        }
+
+        .level-circle.completed {
+            background: linear-gradient(45deg, #2ed573, #1dd1a1);
+            color: white;
+            box-shadow: 0 0 20px rgba(46, 213, 115, 0.6);
+        }
+
+        .level-circle.current {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            box-shadow: 0 0 25px rgba(255, 107, 53, 0.8);
+            animation: currentLevel 2s ease-in-out infinite alternate;
+        }
+
+        .level-circle.locked {
+            background: linear-gradient(45deg, #57606f, #2f3542);
+            color: #a4a4a4;
+            cursor: not-allowed;
+        }
+
+        @keyframes currentLevel {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .level-node:hover .level-circle:not(.locked) {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        .level-label {
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .level-title {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-circle.completed::after {
+            content: '✓';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 25px;
+            height: 25px;
+            background: #fff;
+            color: #2ed573;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-circle.locked::before {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        /* Game Container Styles */
+        .game-container {
+            display: none;
+            position: relative;
+            background: #1a1a1a;
+            min-height: 100vh;
+        }
+
+        .game-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .level-indicator {
+            background: rgba(255, 107, 53, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .control-btn:hover {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .game-wrapper {
+            margin-top: 80px;
+            height: calc(100vh - 80px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Enhanced Game Styles */
+        .game {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #2c1810, #4a2c17);
+        }
+
+        .background {
+            table-layout: fixed;
+            border-spacing: 0;
+        }
+
+        .background td {
+            padding: 0;
+        }
+
+        .lava, .actor {
+            background: linear-gradient(45deg, #ff4757, #ff6b35);
+        }
+
+        .wall {
+            background: linear-gradient(135deg, #2f3542, #57606f);
+            border: solid 1px #40485a;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .wall::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            right: 1px;
+            bottom: 1px;
+            background: linear-gradient(135deg, #747d8c, #57606f);
+            opacity: 0.7;
+        }
+
+        .actor {
+            position: absolute;
+            border-radius: 3px;
+        }
+
+        .coin {
+            background: linear-gradient(45deg, #f1c40f, #f39c12);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
+            animation: sparkle 1.5s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .player {
+            background: linear-gradient(45deg, #3742fa, #5352ed);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(55, 66, 250, 0.8);
+            transition: all 0.1s ease;
+        }
+
+        .lost .player {
+            background: linear-gradient(45deg, #ff3838, #ff4757);
+            animation: death 0.5s ease-out;
+        }
+
+        @keyframes death {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .won .player {
+            background: linear-gradient(45deg, #2ed573, #1dd1a1);
+            animation: victory 1s ease-in-out infinite;
+        }
+
+        @keyframes victory {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Fullscreen styles */
+        body.fullscreen {
+            overflow: hidden;
+        }
+
+        .game-container.fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            background: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .fullscreen-mode .game-header {
+            display: none;
+        }
+
+        .fullscreen-mode .game-wrapper {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .fullscreen-mode .game {
+            max-width: 100vw;
+            max-height: 100vh;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        /* Mobile Controls */
+        .mobile-controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .mobile-btn {
+            background: rgba(255, 107, 53, 0.8);
+            border: none;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .mobile-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 107, 53, 1);
+        }
+
+        /* Show mobile controls only on mobile devices */
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .play-button, .menu-button {
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+
+            .menu-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+
+            .game {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                height: 60vh !important;
+                max-height: 60vh !important;
+                border-radius: 10px;
+            }
+
+            .roadmap {
+                flex-direction: column;
+                gap: 4rem;
+                align-items: center;
+            }
+
+            .roadmap-path {
+                width: 6px;
+                height: 100%;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(180deg, #ff6b35, #f7931e, #ffcd3c);
+            }
+
+            .roadmap-path::before {
+                top: -3px;
+                left: -3px;
+                right: -3px;
+                bottom: -3px;
+            }
+
+            .level-header h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Hide mobile controls on desktop by default */
+        @media (min-width: 769px) {
+            .mobile-controls {
+                display: none !important;
+            }
+        }
+
+        /* Show mobile controls in fullscreen mode regardless of screen size */
+        .fullscreen-mode .mobile-controls {
+            display: flex !important;
+        }
+
+        /* Particles effect */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6b35;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 3s infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 1;
+            }
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Progress indicator */
+        .progress-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            border-radius: 10px;
+            z-index: 999;
+            display: none;
+        }
+
+        .progress-text {
+            color: #ff6b35;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div class="landing-page" id="landingPage">
+        <div class="logo">🌋 VOLCARUN</div>
+        <div class="subtitle">Escape the Volcanic Chaos in this Epic Adventure!</div>
+        
+        <div class="menu-buttons">
+            <button class="play-button" onclick="continueGame()">🎮 CONTINUE ADVENTURE</button>
+            <button class="menu-button levels-button" onclick="showLevelSelection()">🗺️ SELECT LEVEL</button>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🔥 Volcanic Worlds</h3>
+                <p>Navigate through dangerous lava-filled landscapes with stunning visuals</p>
+            </div>
+            <div class="feature">
+                <h3>💎 Collect Treasures</h3>
+                <p>Gather glowing coins while avoiding deadly obstacles and traps</p>
+            </div>
+            <div class="feature">
+                <h3>🗺️ Roadmap Progress</h3>
+                <p>Track your journey through volcanic levels and continue where you left off</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Selection -->
+    <div class="level-selection" id="levelSelection">
+        <button class="back-button" onclick="backToMainMenu()">← Back to Menu</button>
+        
+        <div class="level-header">
+            <h2>🌋 Choose Your Volcanic Path</h2>
+            <p>Select any unlocked level to start your adventure</p>
+        </div>
+        
+        <div class="roadmap-container">
+            <div class="roadmap" id="roadmap">
+                <div class="roadmap-path"></div>
+                <!-- Level nodes will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer">
+        <div class="game-header">
+            <div class="game-title">🌋 VOLCARUN</div>
+            <div class="game-info">
+                <div class="level-indicator" id="levelIndicator">Level 1</div>
+            </div>
+            <div class="game-controls">
+                <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                <button class="control-btn" onclick="backToMenu()">🏠 Menu</button>
+            </div>
+        </div>
+        
+        <div class="game-wrapper">
+            <div id="gameArea"></div>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div class="mobile-controls">
+            <button class="mobile-btn" onmousedown="setKey('left', true)" onmouseup="setKey('left', false)" ontouchstart="setKey('left', true); event.preventDefault();" ontouchend="setKey('left', false); event.preventDefault();">←</button>
+            <button class="mobile-btn" onmousedown="setKey('up', true)" onmouseup="setKey('up', false)" ontouchstart="setKey('up', true); event.preventDefault();" ontouchend="setKey('up', false); event.preventDefault();">↑</button>
+            <button class="mobile-btn" onmousedown="setKey('right', true)" onmouseup="setKey('right', false)" ontouchstart="setKey('right', true); event.preventDefault();" ontouchend="setKey('right', false); event.preventDefault();">→</button>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-text" id="progressText">Progress: 0/8 Levels</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <script>
+        // Game state management
+        let gameState = {
+            currentLevel: 0,
+            unlockedLevels: 1,
+            completedLevels: []
+        };
+
+        // Load game state from memory (since localStorage is not available)
+        let savedGameState = null;
+
+        function saveGameState() {
+            savedGameState = JSON.parse(JSON.stringify(gameState));
+        }
+
+        function loadGameState() {
+            if (savedGameState) {
+                gameState = JSON.parse(JSON.stringify(savedGameState));
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (gameState.completedLevels.length / LEVELS.length) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            if (progressFill && progressText) {
+                progressFill.style.width = progress + '%';
+                progressText.textContent = `Progress: ${gameState.completedLevels.length}/${LEVELS.length} Levels`;
+            }
+        }
+
+        // Level data with names
+        const LEVEL_NAMES = [
+            "Volcanic Entrance",
+            "Lava Falls Canyon", 
+            "Crystal Cave Depths",
+            "Molten Bridge Crossing",
+            "Ember Peak Challenge",
+            "Inferno Maze",
+            "Fire Storm Valley",
+            "The Final Volcano"
+        ];
+
+        // Particle system
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 3000);
+                }, i * 200);
+            }
+        }
+
+        setInterval(createParticles, 5000);
+
+        // Game variables
+        let isGameRunning = false;
+        let isFullscreen = false;
+        let gameDisplay = null;
+        let originalScale = 20;
+        let scale = 20;
+        let currentGameLevel = 0;
+
+        // Generate roadmap
+        function generateRoadmap() {
+            const roadmap = document.getElementById('roadmap');
+            roadmap.innerHTML = '<div class="roadmap-path"></div>';
+            
+            LEVELS.forEach((_, index) => {
+                const levelNode = document.createElement('div');
+                levelNode.className = 'level-node';
+                levelNode.onclick = () => selectLevel(index);
+                
+                const levelCircle = document.createElement('div');
+                levelCircle.className = 'level-circle';
+                
+                const levelTitle = document.createElement('div');
+                levelTitle.className = 'level-title';
+                levelTitle.textContent = LEVEL_NAMES[index];
+                
+                const levelLabel = document.createElement('div');
+                levelLabel.className = 'level-label';
+                levelLabel.textContent = `Level ${index + 1}`;
+                
+                // Determine level state
+                if (gameState.completedLevels.includes(index)) {
+                    levelCircle.classList.add('completed');
+                    levelCircle.textContent = index + 1;
+                } else if (index < gameState.unlockedLevels) {
+                    if (index === gameState.currentLevel) {
+                        levelCircle.classList.add('current');
+                    }
+                    levelCircle.textContent = index + 1;
+                } else {
+                    levelCircle.classList.add('locked');
+                    levelCircle.textContent = '?';
+                }
+                
+                levelNode.appendChild(levelCircle);
+                levelNode.appendChild(levelTitle);
+                levelNode.appendChild(levelLabel);
+                roadmap.appendChild(levelNode);
+            });
+        }
+
+        function selectLevel(levelIndex) {
+            if (levelIndex >= gameState.unlockedLevels) {
+                return; // Level is locked
+            }
+            
+            gameState.currentLevel = levelIndex;
+            saveGameState();
+            startGame(levelIndex);
+        }
+
+        function showLevelSelection() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('levelSelection').style.display = 'block';
+            generateRoadmap();
+        }
+
+        function backToMainMenu() {
+            document.getElementById('levelSelection').style.display = 'none';
+            document.getElementById('landingPage').style.display = 'flex';
+        }
+
+        function continueGame() {
+            startGame(gameState.currentLevel);
+        }
+
+        // Start game function
+        function startGame(levelIndex = 0) {
+            currentGameLevel = levelIndex;
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('levelSelection').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'block';
+            isGameRunning = true;
+            
+            // Update level indicator
+            const levelIndicator = document.getElementById('levelIndicator');
+            levelIndicator.textContent = `Level ${levelIndex + 1}: ${LEVEL_NAMES[levelIndex]}`;
+            
+            // Set initial scale based on screen size
+            if (window.innerWidth < 768) {
+                originalScale = Math.max(12, Math.min(18, window.innerWidth / 60));
+            } else {
+                originalScale = 20;
+            }
+            scale = originalScale;
+            
+            updateProgress();
+            
+            // Initialize the game with a slight delay to ensure DOM is ready
+            setTimeout(() => {
+                runLevel(new Level(LEVELS[levelIndex]), DOMDisplay, function(status) {
+                    if (status == 'lost') {
+                        setTimeout(() => startGame(levelIndex), 500);
+                    } else if (status == 'won') {
+                        // Mark level as completed
+                        if (!gameState.completedLevels.includes(levelIndex)) {
+                            gameState.completedLevels.push(levelIndex);
+                        }
+                        
+                        // Unlock next level
+                        if (levelIndex + 1 < LEVELS.length && gameState.unlockedLevels <= levelIndex + 1) {
+                            gameState.unlockedLevels = levelIndex + 2;
+                        }
+                        
+                        // Update current level to next level
+                        if (levelIndex + 1 < LEVELS.length) {
+                            gameState.currentLevel = levelIndex + 1;
+                        }
+                        
+                        saveGameState();
+                        updateProgress();
+                        
+                        if (levelIndex + 1 < LEVELS.length) {
+                            setTimeout(() => startGame(levelIndex + 1), 1000);
+                        } else {
+                            setTimeout(() => {
+                                alert('🎉 Congratulations! You escaped the volcanic chaos!');
+                                backToMenu();
+                            }, 1000);
+                        }
+                    }
+                });
+            }, 200);
+        }
+
+        // Back to menu function
+        function backToMenu() {
+            if (isFullscreen) {
+                exitFullscreen();
+            }
+            
+            if (gameDisplay) {
+                gameDisplay.clear();
+                gameDisplay = null;
+            }
+            
+            // Clear the game area
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = '';
+            
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('landingPage').style.display = 'flex';
+            isGameRunning = false;
+        }
+
+        // Enhanced fullscreen functions
+        function enterFullscreen() {
+            const gameContainer = document.getElementById('gameContainer');
+            
+            // Request fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+            
+            // Apply fullscreen styles
+            document.body.classList.add('fullscreen');
+            gameContainer.classList.add('fullscreen-mode');
+            isFullscreen = true;
+            
+            // Recalculate and apply optimal scale for fullscreen
+            setTimeout(() => {
+                if (gameDisplay) {
+                    calculateFullscreenScale();
+                    gameDisplay.redraw();
+                }
+            }, 100);
+        }
+
+        function exitFullscreen() {
+            const gameContainer = document.getElementById('gameContainer');
+            
+            // Exit browser fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            
+            // Remove fullscreen styles
+            document.body.classList.remove('fullscreen');
+            gameContainer.classList.remove('fullscreen-mode');
+            isFullscreen = false;
+            
+            // Restore original scale
+            scale = originalScale;
+            setTimeout(() => {
+                if (gameDisplay) {
+                    gameDisplay.redraw();
+                }
+            }, 100);
+        }
+
+        function toggleFullscreen() {
+            if (!isFullscreen) {
+                enterFullscreen();
+            } else {
+                exitFullscreen();
+            }
+        }
+
+        function calculateFullscreenScale() {
+            if (!gameDisplay || !gameDisplay.level) return;
+            
+            const level = gameDisplay.level;
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // Leave some margin for UI elements
+            const availableWidth = screenWidth * 0.95;
+            const availableHeight = screenHeight * 0.85; // More space for mobile controls
+            
+            // Calculate scales to fit the level
+            const scaleX = availableWidth / level.width;
+            const scaleY = availableHeight / level.height;
+            
+            // Use the smaller scale to ensure everything fits
+            scale = Math.min(scaleX, scaleY, 30); // Cap at 30 for performance
+            scale = Math.max(scale, 10); // Minimum readable size
+        }
+
+        // ESC key handler
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isGameRunning) {
+                if (isFullscreen) {
+                    exitFullscreen();
+                } else {
+                    backToMenu();
+                }
+            }
+        });
+
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const isCurrentlyFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || 
+                                            document.mozFullScreenElement || document.msFullscreenElement);
+            
+            if (!isCurrentlyFullscreen && isFullscreen) {
+                // User exited fullscreen via ESC or other means
+                exitFullscreen();
+            }
+        }
+
+        // Mobile controls
+        function setKey(direction, pressed) {
+            if (window.arrows) {
+                window.arrows[direction] = pressed;
+            }
+        }
+
+        // Prevent touch scrolling on mobile when game is running
+        document.addEventListener('touchmove', function(e) {
+            if (isGameRunning) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Game levels with better spacing and alignment
+        var LEVELS = [
+            [
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                                ',
+                '                                                                  xxx           ',
+                '                                                   xx      xx    xx!xx          ',
+                '                                    o o      xx                  x!!!x          ',
+                '                                                                 xx!xx          ',
+                '                                   xxxxx                          xvx           ',
+                '                                                                            xx  ',
+                '  xx                                      o o                                x  ',
+                '  x                     o                                                    x  ',
+                '  x                                      xxxxx                             o x  ',
+                '  x          xxxx       o                                                    x  ',
+                '  x  @       x  x                                                xxxxx       x  ',
+                '  xxxxxxxxxxxx  xxxxxxxxxxxxxxx   xxxxxxxxxxxxxxxxxxxx     xxxxxxx   xxxxxxxxx  ',
+                '                              x   x                  x     x                    ',
+                '                              x!!!x                  x!!!!!x                    ',
+                '                              x!!!x                  x!!!!!x                    ',
+                '                              xxxxx                  xxxxxxx                    ',
+                '                                                                                ',
+                '                                                                                ',
+            ],
+            [
+                '                                      x!!x                        xxxxxxx                                    x!x  ',
+                '                                      x!!x                     xxxx     xxxx                                 x!x  ',
+                '                                      x!!xxxxxxxxxx           xx           xx                                x!x  ',
+                '                                      xx!!!!!!!!!!xx         xx             xx                               x!x  ',
+                '                                       xxxxxxxxxx!!x         x                                    o   o   o  x!x  ',
+                '                                                xx!x         x     o   o                                    xx!x  ',
+                '                                                 x!x         x                                xxxxxxxxxxxxxxx!!x  ',
+                '                                                 xvx         x     x   x                        !!!!!!!!!!!!!!xx  ',
+                '                                                             xx  |   |   |  xx            xxxxxxxxxxxxxxxxxxxxx   ',
+                '                                                              xx!!!!!!!!!!!xx            v                        ',
+                '                                                               xxxx!!!!!xxxx                                      ',
+                '                                               x     x            xxxxxxx        xxx         xxx                  ',
+                '                                               x     x                           x x         x x                  ',
+                '                                               x     x                             x         x                    ',
+                '                                               x     x                             xx        x                    ',
+                '                                               xx    x                             x         x                    ',
+                '                                               x     x      o  o     x   x         x         x                    ',
+                '               xxxxxxx        xxx   xxx        x     x               x   x         x         x                    ',
+                '              xx     xx         x   x          x     x     xxxxxx    x   x   xxxxxxxxx       x                    ',
+                '             xx       xx        x o x          x    xx               x   x   x               x                    ',
+                '     @       x         x        x   x          x     x               x   x   x               x                    ',
+                '    xxx      x         x        x   x          x     x               x   xxxxx   xxxxxx      x                    ',
+                '    x x      x         x       xx o xx         x     x               x     o     x x         x                    ',
+                '!!!!x x!!!!!!x         x!!!!!!xx     xx!!!!!!!!xx    x!!!!!!!!!!     x     =     x x         x                    ',
+                '!!!!x x!!!!!!x         x!!!!!xx       xxxxxxxxxx     x!!!!!!!xx!     xxxxxxxxxxxxx xx  o o  xx                    ',
+                '!!!!x x!!!!!!x         x!!!!!x    o                 xx!!!!!!xx !                    xx     xx                     ',
+                '!!!!x x!!!!!!x         x!!!!!x                     xx!!!!!!xx  !                     xxxxxxx                      ',
+                '!!!!x x!!!!!!x         x!!!!!xx       xxxxxxxxxxxxxx!!!!!!xx   !                                                  ',
+                '!!!!x x!!!!!!x         x!!!!!!xxxxxxxxx!!!!!!!!!!!!!!!!!!xx    !                                                  ',
+                '!!!!x x!!!!!!x         x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!xx     !                                                  ',
+            ],
+            [
+                '                                                                                                              ',
+                '                                                                                                              ',
+                '                                                                                                              ',
+                '                                                                                                              ',
+                '                                                                                                              ',
+                '                                        o                                                                     ',
+                '                                                                                                              ',
+                '                                        x                                                                     ',
+                '                                        x                                                                     ',
+                '                                        x                                                                     ',
+                '                                        x                                                                     ',
+                '                                       xxx                                                                    ',
+                '                                       x x                 !!!        !!!  xxx                                ',
+                '                                       x x                 !x!        !x!                                     ',
+                '                                     xxx xxx                x          x                                      ',
+                '                                      x   x                 x   oooo   x       xxx                            ',
+                '                                      x   x                 x          x      x!!!x                           ',
+                '                                      x   x                 xxxxxxxxxxxx       xxx                            ',
+                '                                     xx   xx      x   x      x                                                ',
+                '                                      x   xxxxxxxxx   xxxxxxxx              x x                               ',
+                '                                      x   x           x                    x!!!x                              ',
+                '                                      x   x           x                     xxx                               ',
+                '                                     xx   xx          x                                                       ',
+                '                                      x   x= = = =    x            xxx                                        ',
+                '                                      x   x           x           x!!!x                                       ',
+                '                                      x   x    = = = =x     o      xxx       xxx                              ',
+                '                                     xx   xx          x                     x!!!x                             ',
+                '                              o   o   x   x           x     x                xxv        xxx                   ',
+                '                                      x   x           x              x                 x!!!x                  ',
+                '                             xxx xxx xxx xxx     o o  x!!!!!!!!!!!!!!x                   vx                   ',
+                '                             x xxx x x xxx x          x!!!!!!!!!!!!!!x                                        ',
+                '                             x             x   xxxxxxxxxxxxxxxxxxxxxxx                                        ',
+                '                             xx           xx                                         xxx                      ',
+                '  xxx                         x     x     x                                         x!!!x                xxx  ',
+                '  x x                         x    xxx    x                                          xxx                 x x  ',
+                '  x                           x    xxx    xxxxxxx                        xxxxx                             x  ',
+                '  x                           x           x                              x   x                             x  ',
+                '  x                           xx          x                              x x x                             x  ',
+                '  x                                       x       |xxxx|    |xxxx|     xxx xxx                             x  ',
+                '  x                xxx             o o    x                              x         xxx                     x  ',
+                '  x               xxxxx       xx          x                             xxx       x!!!x          x         x  ',
+                '  x               oxxxo       x    xxx    x                             x x        xxx          xxx        x  ',
+                '  x                xxx        xxxxxxxxxxxxx  x oo x    x oo x    x oo  xx xx                    xxx        x  ',
+                '  x      @          x         x           x!!x    x!!!!x    x!!!!x    xx   xx                    x         x  ',
+                '  xxxxxxxxxxxxxxxxxxxxxxxxxxxxx           xxxxxxxxxxxxxxxxxxxxxxxxxxxxx     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ',
+                '                                                                                                              ',
+                '                                                                                                              ',
+            ],
+            [
+                '                                                                                                  xxx x       ',
+                '                                                                                                      x       ',
+                '                                                                                                  xxxxx       ',
+                '                                                                                                  x           ',
+                '                                                                                                  x xxx       ',
+                '                          o                                                                       x x x       ',
+                '                                                                                             o o oxxx x       ',
+                '                   xxx                                                                                x       ',
+                '       !  o  !                                                xxxxx xxxxx xxxxx xxxxx xxxxx xxxxx xxxxx       ',
+                '       x     x                                                x   x x   x x   x x   x x   x x   x x           ',
+                '       x= o  x            x                                   xxx x xxx x xxx x xxx x xxx x xxx x xxxxx       ',
+                '       x     x                                                  x x   x x   x x   x x   x x   x x     x       ',
+                '       !  o  !            o                                  xxxx xxxxx xxxxx xxxxx xxxxx xxxxx xxxxxxx       ',
+                '                                                                                                              ',
+                '          o              xxx                              xx                                                  ',
+                '                                                                                                              ',
+                '                                                                                                              ',
+                '                                                      xx                                                      ',
+                '                   xxx         xxx                                                                            ',
+                '                                                                                                              ',
+                '                          o                                                     x      x                      ',
+                '                                                          xx     xx                                           ',
+                '             xxx         xxx         xxx                                 x                  x                 ',
+                '                                                                                                              ',
+                '                                                                 ||                                           ',
+                '  xxxxxxxxxxx                                                                                                 ',
+                '  x         x o xxxxxxxxx o xxxxxxxxx o xx                                                x                   ',
+                '  x         x   x       x   x       x   x                 ||                  x     x                         ',
+                '  x  @      xxxxx   o   xxxxx   o   xxxxx                                                                     ',
+                '  xxxxxxx                                     xxxxx       xx     xx     xxx                                   ',
+                '        x=                  =                =x   x                     xxx                                   ',
+                '        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   x!!!!!!!!!!!!!!!!!!!!!xxx!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+                '                                                  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                '                                                                                                              ',
+            ],
+            [
+                '                                                                                      ',
+                '       o     o     o     o     o     o     o                                          ',
+                '     xxxxx xxxxx xxxxx xxxxx xxxxx xxxxx xxxxx                                        ',
+                '                                                                                      ',
+                '            x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x                                          ',
+                '            x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x                                          ',
+                '            x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x                                          ',
+                '            x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x                                          ',
+                '            x                                o                                        ',
+                '            x   o   =   o   =   o   =   o   xxx                                      ',
+                '            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                        ',
+                '                                                                                      ',
+                '   @       xxx     v     xxx     v     xxx     v     xxx                              ',
+                'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ',
+                '                                                                                      ',
+            ],
+            [
+                '                                                                                      ',
+                '     @                                                                                ',
+                '     x                                                                                ',
+                '     x   o                                                                            ',
+                '     x   xxx                                                                          ',
+                '     x       o                                                                        ',
+                '     x       xxx                                                                      ',
+                '     x          o                                                                     ',
+                '     x          xxx                                                                   ',
+                '     x             o                                                                  ',
+                '     x             xxx                                                                ',
+                '     x                o                                                               ',
+                '     x                xxx                                                             ',
+                '     x                   o                                                            ',
+                '     x                   xxx                                                          ',
+                '     x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ',
+                '                                                                                      ',
+            ],
+            [
+                'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                'x      o          =      o        =     o       =      o         =      o            x',
+                'x  @   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  x',
+                'x                                                                                   x',
+                'x    o   o   o   o   o   o   o   o   o   o   o   o   o   o   o   o   o   o   o      x',
+                'x   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    x',
+                'x!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x',
+                'x                                                                                   x',
+                'x     v     v     v     v     v     v     v     v     v     v     v     v     v     x',
+                'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            ],
+        ]; 
+    
+
+        function Vector(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        Vector.prototype.plus = function (other) {
+            return new Vector(this.x + other.x, this.y + other.y);
+        };
+
+        Vector.prototype.times = function (scale) {
+            return new Vector(this.x * scale, this.y * scale);
+        };
+
+        var actorchars = {
+            '@': Player,
+            'o': Coin,
+            '=': Lava,
+            '|': Lava,
+            'v': Lava,
+        };
+
+        function Player(pos) {
+            this.pos = pos.plus(new Vector(0, -0.5));
+            this.size = new Vector(0.4, 1.0);
+            this.speed = new Vector(0, 0);
+        }
+
+        Player.prototype.type = 'player';
+
+        function Lava(pos, ch) {
+            this.pos = pos;
+            this.size = new Vector(1, 1);
+            if (ch === '=') this.speed = new Vector(2, 0);
+            else if (ch === '|') this.speed = new Vector(0, 2);
+            else if (ch === 'v') {
+                this.speed = new Vector(0, 3);
+                this.repeatPos = pos;
+            }
+        }
+        Lava.prototype.type = 'lava';
+
+        function Coin(pos) {
+            this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
+            this.size = new Vector(0.6, 0.6);
+            this.wobble = Math.random() * Math.PI * 2;
+        }
+
+        Coin.prototype.type = 'coin';
+
+        function Level(plan) {
+            this.width = plan[0].length;
+            this.height = plan.length;
+            this.grid = [];
+            this.actors = [];
+
+            for (var y = 0; y < this.height; y++) {
+                var line = plan[y],
+                    gridLine = [];
+                for (var x = 0; x < this.width; x++) {
+                    var ch = line[x],
+                        fieldType = null;
+                    var Actor = actorchars[ch];
+                    if (Actor) this.actors.push(new Actor(new Vector(x, y), ch));
+                    else if (ch === 'x') fieldType = 'wall';
+                    else if (ch === '!') fieldType = 'lava';
+                    gridLine.push(fieldType);
+                }
+                this.grid.push(gridLine);
+            }
+            this.player = this.actors.filter(function (actor) {
+                return actor.type === 'player';
+            })[0];
+            this.status = this.finishDelay = null;
+        }
+
+        Level.prototype.isFinished = function () {
+            return this.status != null && this.finishDelay < 0;
+        };
+
+        function element(name, className) {
+            var elem = document.createElement(name);
+            if (className) elem.className = className;
+            return elem;
+        }
+
+        function DOMDisplay(parent, level) {
+            this.wrap = parent.appendChild(element('div', 'game'));
+            this.level = level;
+            this.wrap.appendChild(this.drawBackground());
+            this.actorLayer = null;
+            this.drawFrame();
+            
+            // Store reference for cleanup
+            gameDisplay = this;
+        }
+
+        DOMDisplay.prototype.redraw = function() {
+            // Clear existing content
+            this.wrap.innerHTML = '';
+            
+            // Redraw with current scale
+            this.wrap.appendChild(this.drawBackground());
+            this.actorLayer = null;
+            this.drawFrame();
+        };
+
+        DOMDisplay.prototype.drawBackground = function () {
+            var table = element('table', 'background');
+            table.style.width = this.level.width * scale + 'px';
+            table.style.height = this.level.height * scale + 'px';
+            
+            this.level.grid.forEach(function (row) {
+                var rowElement = table.appendChild(element('tr'));
+                rowElement.style.height = scale + 'px';
+                row.forEach(function (type) {
+                    var cell = rowElement.appendChild(element('td', type));
+                    cell.style.width = scale + 'px';
+                    cell.style.height = scale + 'px';
+                });
+            });
+            return table;
+        };
+
+        DOMDisplay.prototype.drawActors = function () {
+            var wrap = element('div');
+            
+            this.level.actors.forEach(function (actor) {
+                var rect = wrap.appendChild(element('div', 'actor ' + actor.type));
+                rect.style.width = actor.size.x * scale + 'px';
+                rect.style.height = actor.size.y * scale + 'px';
+                rect.style.left = actor.pos.x * scale + 'px';
+                rect.style.top = actor.pos.y * scale + 'px';
+            });
+            return wrap;
+        };
+
+        DOMDisplay.prototype.drawFrame = function () {
+            if (this.actorLayer) this.wrap.removeChild(this.actorLayer);
+            this.actorLayer = this.wrap.appendChild(this.drawActors());
+            this.wrap.className = 'game ' + (this.level.status || '');
+            this.scrollPlayerIntoView();
+        };
+
+        DOMDisplay.prototype.scrollPlayerIntoView = function () {
+            var width = this.wrap.clientWidth;
+            var height = this.wrap.clientHeight;
+            var margin = width / 3;
+
+            var left = this.wrap.scrollLeft,
+                right = left + width;
+            var top = this.wrap.scrollTop,
+                bottom = top + height;
+
+            var player = this.level.player;
+            var center = player.pos.plus(player.size.times(0.5)).times(scale);
+
+            if (center.x < left + margin) this.wrap.scrollLeft = center.x - margin;
+            else if (center.x > right - margin)
+                this.wrap.scrollLeft = center.x + margin - width;
+            if (center.y < top + margin) this.wrap.scrollTop = center.y - margin;
+            else if (center.y > bottom - margin)
+                this.wrap.scrollTop = center.y + margin - height;
+        };
+
+        DOMDisplay.prototype.clear = function () {
+            if (this.wrap && this.wrap.parentNode) {
+                this.wrap.parentNode.removeChild(this.wrap);
+            }
+        };
+
+        Level.prototype.obstacleAt = function (pos, size) {
+            var xStart = Math.floor(pos.x);
+            var xEnd = Math.ceil(pos.x + size.x);
+            var yStart = Math.floor(pos.y);
+            var yEnd = Math.ceil(pos.y + size.y);
+
+            if (xStart < 0 || xEnd > this.width || yStart < 0) return 'wall';
+            if (yEnd > this.height) return 'lava';
+            for (var y = yStart; y < yEnd; y++) {
+                for (var x = xStart; x < xEnd; x++) {
+                    var fieldType = this.grid[y][x];
+                    if (fieldType) return fieldType;
+                }
+            }
+        };
+
+        Level.prototype.actorAt = function (actor) {
+            for (var i = 0; i < this.actors.length; i++) {
+                var other = this.actors[i];
+                if (
+                    other != actor &&
+                    actor.pos.x + actor.size.x > other.pos.x &&
+                    actor.pos.x < other.pos.x + other.size.x &&
+                    actor.pos.y + actor.size.y > other.pos.y &&
+                    actor.pos.y < other.pos.y + other.size.y
+                )
+                    return other;
+            }
+        };
+
+        var maxStep = 0.05;
+
+        Level.prototype.animate = function (step, keys) {
+            if (this.status != null) this.finishDelay -= step;
+
+            while (step > 0) {
+                var thisStep = Math.min(step, maxStep);
+                this.actors.forEach(function (actor) {
+                    actor.act(thisStep, this, keys);
+                }, this);
+                step -= thisStep;
+            }
+        };
+
+        Lava.prototype.act = function (step, level) {
+            var newPos = this.pos.plus(this.speed.times(step));
+            if (!level.obstacleAt(newPos, this.size)) this.pos = newPos;
+            else if (this.repeatPos) this.pos = this.repeatPos;
+            else this.speed = this.speed.times(-1);
+        };
+
+        var wobbleSpeed = 8,
+            wobbleDist = 0.07;
+
+        Coin.prototype.act = function (step) {
+            this.wobble += step * wobbleSpeed;
+            var wobblePos = Math.sin(this.wobble) * wobbleDist;
+            this.pos = this.basePos.plus(new Vector(0, wobblePos));
+        };
+
+        var playerXSpeed = 12;
+
+        Player.prototype.moveX = function (step, level, keys) {
+            this.speed.x = 0;
+            if (keys.left) this.speed.x -= playerXSpeed;
+            if (keys.right) this.speed.x += playerXSpeed;
+
+            var motion = new Vector(this.speed.x * step, 0);
+            var newPos = this.pos.plus(motion);
+            var obstacle = level.obstacleAt(newPos, this.size);
+            if (obstacle) level.playerTouched(obstacle);
+            else this.pos = newPos;
+        };
+
+        var gravity = 30;
+        var jumpSpeed = 17;
+
+        Player.prototype.moveY = function (step, level, keys) {
+            this.speed.y += step * gravity;
+            var motion = new Vector(0, this.speed.y * step);
+            var newPos = this.pos.plus(motion);
+            var obstacle = level.obstacleAt(newPos, this.size);
+            if (obstacle) {
+                level.playerTouched(obstacle);
+                if (keys.up && this.speed.y > 0) this.speed.y = -jumpSpeed;
+                else this.speed.y = 0;
+            } else {
+                this.pos = newPos;
+            }
+        };
+
+        Player.prototype.act = function (step, level, keys) {
+            this.moveX(step, level, keys);
+            this.moveY(step, level, keys);
+
+            var otherActor = level.actorAt(this);
+            if (otherActor) level.playerTouched(otherActor.type, otherActor);
+
+            if (level.status == 'lost') {
+                this.pos.y += step;
+                this.size.y -= step;
+            }
+        };
+
+        Level.prototype.playerTouched = function (type, actor) {
+            if (type == 'lava' && this.status == null) {
+                this.status = 'lost';
+                this.finishDelay = 1;
+            } else if (type == 'coin') {
+                this.actors = this.actors.filter(function (other) {
+                    return other != actor;
+                });
+                if (
+                    !this.actors.some(function (actor) {
+                        return actor.type == 'coin';
+                    })
+                ) {
+                    this.status = 'won';
+                    this.finishDelay = 1;
+                }
+            }
+        };
+
+        var arrowCodes = { 37: 'left', 38: 'up', 39: 'right' };
+
+        function trackKeys(codes) {
+            var pressed = Object.create(null);
+            function handler(event) {
+                if (codes.hasOwnProperty(event.keyCode)) {
+                    var down = event.type == 'keydown';
+                    pressed[codes[event.keyCode]] = down;
+                    event.preventDefault();
+                }
+            }
+            addEventListener('keydown', handler);
+            addEventListener('keyup', handler);
+            return pressed;
+        }
+
+        function runAnimation(frameFunc) {
+            var lastTime = null;
+            function frame(time) {
+                var stop = false;
+                if (lastTime != null) {
+                    var timeStep = Math.min(time - lastTime, 100) / 1000;
+                    stop = frameFunc(timeStep) === false;
+                }
+                lastTime = time;
+                if (!stop && isGameRunning) requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        }
+
+        var arrows = trackKeys(arrowCodes);
+        window.arrows = arrows; // Make arrows available globally for mobile controls
+
+        function runLevel(level, Display, andThen) {
+            var display = new Display(document.getElementById('gameArea'), level);
+            runAnimation(function (step) {
+                level.animate(step, arrows);
+                display.drawFrame(step);
+                if (level.isFinished()) {
+                    display.clear();
+                    if (andThen) andThen(level.status);
+                    return false;
+                }
+            });
+        }
+
+        // Touch event handlers for mobile
+        document.addEventListener('touchstart', function(e) {
+            if (isGameRunning) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', function(e) {
+            if (isGameRunning) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Responsive game scaling
+        function updateGameScale() {
+            if (!isGameRunning || isFullscreen) return;
+            
+            let newScale;
+            if (window.innerWidth < 768) {
+                newScale = Math.max(12, Math.min(18, window.innerWidth / 60));
+            } else {
+                newScale = 20;
+            }
+            
+            if (Math.abs(newScale - scale) > 1) {
+                scale = newScale;
+                originalScale = newScale;
+                if (gameDisplay) {
+                    gameDisplay.redraw();
+                }
+            }
+        }
+
+        window.addEventListener('resize', function() {
+            if (isFullscreen && gameDisplay) {
+                setTimeout(() => {
+                    calculateFullscreenScale();
+                    gameDisplay.redraw();
+                }, 100);
+            } else {
+                updateGameScale();
+            }
+        });
+
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                if (isFullscreen && gameDisplay) {
+                    calculateFullscreenScale();
+                    gameDisplay.redraw();
+                } else {
+                    updateGameScale();
+                }
+            }, 200);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGameState();
+            updateProgress();
+            createParticles();
+        });
+
+        // Initialize particles on load
+        createParticles();
+    </script>
+</body>
+</html>
